@@ -35,3 +35,11 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## Documentation
+
+Documentation was implemented via swagger ui
+
+```
+http://localhost:{PORT}/api
+```
