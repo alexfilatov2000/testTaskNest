@@ -15,6 +15,9 @@ $ create database your_db_name;
 # copy variables and put your secrets
 $ cp .env.example .env
 
+# build the app
+$ npm run build
+
 # run migrations
 $ npm run db:migrate
 
