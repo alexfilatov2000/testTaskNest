@@ -19,7 +19,7 @@ module.exports = {
         'Users',
         {
           id: { type: dataTypes.UUID, defaultValue: dataTypes.UUIDV4, primaryKey: true },
-          email: { type: dataTypes.STRING },
+          email: { type: dataTypes.STRING, unique: true },
           passwordHash: { type: dataTypes.STRING },
           name: { type: dataTypes.STRING },
           roleId: { type: dataTypes.UUID, references: { model: 'Roles', key: 'id' } },

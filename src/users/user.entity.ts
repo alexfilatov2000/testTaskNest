@@ -10,6 +10,7 @@ import {
   DeletedAt,
   BelongsTo,
   Scopes,
+  Unique,
 } from 'sequelize-typescript';
 import { UUIDV4 } from 'sequelize';
 import _ from 'lodash';
@@ -37,6 +38,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
   @Column
   id!: string;
 
+  @Unique
   @Column
   email!: string;
 
