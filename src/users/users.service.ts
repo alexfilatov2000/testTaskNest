@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { User, UserPublicAttributes } from './users.model';
+import { User, UserPublicAttributes } from './user.entity';
 import { CreateUserRequest, UpdateUserBodyDto } from '@src/users/dto/users.dto';
 import { Role } from '@src/roles/roles.model';
 import { RolesService } from '@src/roles/roles.service';

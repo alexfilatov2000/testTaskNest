@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { verify, hash } from 'argon2';
-import { UserPublicAttributes } from '@src/users/users.model';
+import { UserPublicAttributes } from '@src/users/user.entity';
 
 @Injectable()
 export class AuthService {

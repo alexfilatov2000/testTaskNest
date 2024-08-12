@@ -2,7 +2,7 @@ import { QueryInterface, Op } from 'sequelize';
 import { randomUUID } from 'crypto';
 import { RoleCreationAttributes } from '@src/roles/roles.model';
 import { RoleName } from '@src/roles/dto/role.dto';
-import { UserCreationAttributes } from '@src/users/users.model';
+import { UserCreationAttributes } from '@src/users/user.entity';
 import { hash } from 'argon2';
 import config from '@src/config/configuration';
 

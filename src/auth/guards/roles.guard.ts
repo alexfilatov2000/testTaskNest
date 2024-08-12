@@ -1,17 +1,18 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { roleKey } from '@src/auth/roles.decorator';
 import { Reflector } from '@nestjs/core';
-import { RoleAction, RoleMetadata } from '@src/auth/dto/auth.dto';
+import { RoleAction, RoleMetadata, RoleOptionsMetadata } from '@src/auth/dto/auth.dto';
 import { RoleName } from '@src/roles/dto/role.dto';
 import _ from 'lodash';
+import { ValidationService } from '@src/utils/validator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredRoles = this.reflector.get<RoleMetadata>(roleKey, context.getHandler());
+    const roleMetadata = this.reflector.get<RoleMetadata>(roleKey, context.getHandler());
 
-    if (!requiredRoles) {
+    if (!roleMetadata) {
       return true;
     }
 
@@ -20,7 +21,7 @@ export class RolesGuard implements CanActivate {
     const roleName = request.user.roleName;
     const userId = request.user.userId;
 
-    const isRoleAcceptable = requiredRoles.roles.includes(roleName);
+    const isRoleAcceptable = roleMetadata.roles.includes(roleName);
 
     if (!isRoleAcceptable) {
       return false;
@@ -32,7 +33,7 @@ export class RolesGuard implements CanActivate {
 
     let result;
 
-    switch (requiredRoles.action) {
+    switch (roleMetadata.action) {
       case RoleAction.All:
       case RoleAction.Read:
         result = true;
@@ -40,17 +41,31 @@ export class RolesGuard implements CanActivate {
       case RoleAction.Delete:
       case RoleAction.Create:
       case RoleAction.Update:
-        if (requiredRoles.userIdPath) {
-          const value = _.get(request, requiredRoles.userIdPath);
-          result = value === userId;
-        } else {
-          result = false;
-        }
+        result = await RolesGuard.checkUserOwnership(roleMetadata.options, userId, request);
         break;
       default:
         result = false;
     }
 
     return result;
+  }
+
+  private static async checkUserOwnership(
+    options: RoleOptionsMetadata | undefined,
+    userId: string,
+    request: Request
+  ): Promise<boolean> {
+    if (!options) {
+      return false;
+    }
+
+    const { reqPath, uuidPkField, model, userIdField } = options;
+    const value = _.get(request, reqPath);
+
+    await ValidationService.validateUuid(value);
+
+    const resource = await (model as any).findOne({ where: { [uuidPkField]: value } });
+
+    return (resource as any)?.[userIdField] === userId;
   }
 }

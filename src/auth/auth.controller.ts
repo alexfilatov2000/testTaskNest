@@ -4,7 +4,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
-import { UserPublicAttributes } from '@src/users/users.model';
+import { UserPublicAttributes } from '@src/users/user.entity';
 
 @ApiTags('auth')
 @Controller('auth')
